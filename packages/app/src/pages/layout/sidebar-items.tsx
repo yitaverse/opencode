@@ -1,4 +1,4 @@
-import type { Session } from "@opencode-ai/sdk/v2/client"
+import type { Session, SessionDirectoryEntry } from "@opencode-ai/sdk/v2/client"
 import { Avatar } from "@opencode-ai/ui/avatar"
 import { ContextMenu } from "@opencode-ai/ui/context-menu"
 import { Icon } from "@opencode-ai/ui/icon"
@@ -7,7 +7,7 @@ import { Spinner } from "@opencode-ai/ui/spinner"
 import { Tooltip } from "@opencode-ai/ui/tooltip"
 import { getFilename } from "@opencode-ai/core/util/path"
 import { A, useParams } from "@solidjs/router"
-import { createMemo, createSignal, For, type JSX, Match, Show, Switch } from "solid-js"
+import { createMemo, createSignal, For, type Accessor, type JSX, Match, Show, Switch } from "solid-js"
 import { useGlobalSync } from "@/context/global-sync"
 import { useGlobalSDK } from "@/context/global-sdk"
 import { useLanguage } from "@/context/language"
@@ -219,13 +219,13 @@ export const SessionItem = (props: SessionItemProps): JSX.Element => {
 
   const warm = (span: number, priority: "high" | "low") => {
     const nav = props.navList?.()
-    const list = nav?.some((item) => item.id === props.session.id && item.directory === props.session.directory)
+    const list = nav?.some((item: Session) => item.id === props.session.id && item.directory === props.session.directory)
       ? nav
       : props.list
 
     props.prefetchSession(props.session, priority)
 
-    const idx = list.findIndex((item) => item.id === props.session.id && item.directory === props.session.directory)
+    const idx = list.findIndex((item: Session) => item.id === props.session.id && item.directory === props.session.directory)
     if (idx === -1) return
 
     for (let step = 1; step <= span; step++) {
